@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Offline Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+      	width: 100%;
+        height: 100%;
+      }
+      img#qr-code {
+      	width: 20%;
+      	position: absolute;
+      	left: 5px;
+      	bottom: 5px;
+
+      }
+      img#end-point {
+      	width: 10%;
+      	position: absolute;
+      	top: 5px;
+      	right: 5px;
+      }
+      #container {
+      	width: 500px;
+        height: 300px;
+      	position: relative;
+      	
+        border: 5px solid #111;
+      }
+    </style>
+  </head>
+  <body>
+  	<div id="container">
+	    <div id="map"></div>
+	    <img id="qr-code" src="https://chart.googleapis.com/chart?chs=150x150&choe=UTF-8&cht=qr&chl=50.080521%2C+14.408675%0D%0A50.090476%2C+14.437665" />
+	    <img id="end-point" src="http://placehold.it/100/000/000" />
+	</div>
+    <script>
+      function initMap() {
+		  var originalMapCenter = new google.maps.LatLng(56.315517, 43.931545);
+		  var map = new google.maps.Map(document.getElementById('map'), {
+		    zoom: 10,
+		    center: originalMapCenter
+		  });
+
+		  var infowindow = new google.maps.InfoWindow({
+		    content: 'Change the zoom level',
+		    position: originalMapCenter
+		  });
+		  //infowindow.open(map);
+
+		  map.addListener('dragend', function() {
+		    infowindow.setContent('Zoom: ' + map.getBounds());
+		    console.log(map.getBounds().getSouthWest().lat(), map.getBounds().getSouthWest().lng())
+		     console.log(map.getBounds().getNorthEast().lat(), map.getBounds().getNorthEast().lng())
+		     var mapData = map.getBounds().getSouthWest().lat() + "," + map.getBounds().getSouthWest().lng() + String.fromCharCode(13) + map.getBounds().getNorthEast().lat() + "," + map.getBounds().getNorthEast().lng();
+		     document.getElementById('qr-code').src = "https://chart.googleapis.com/chart?chs=150x150&choe=UTF-8&cht=qr&chl=" + encodeURIComponent(mapData)
+		  });
+		}
+
+      
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBIN7DFxjM1Ty0aUGm7yQfOHTzXMrSJEFE&callback=initMap"
+    async defer></script>
+    <script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
+  </body>
+</html>
